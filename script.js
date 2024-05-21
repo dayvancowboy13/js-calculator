@@ -1,4 +1,4 @@
-console.log("testing 1,2, 1,2")
+//console.log("testing 1,2, 1,2")
 
 // let firstNumber;
 // let operator;
@@ -13,7 +13,6 @@ function operate(operator, num1, num2){
         case "+":
             result = add(num1,num2);
             break;
-        
         case "-":
             result = subtract(num1,num2);
             break;

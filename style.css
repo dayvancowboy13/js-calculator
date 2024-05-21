@@ -1,7 +1,57 @@
+:root{
+    --bg-color: #2a4d69;
+    --buttons-dark:#4b86b4;
+    --buttons-light: #adcbe3;
+    --light-color: #e7eff6;
+    --vivid-blue: #63ace5;
+}
+
 html{
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 38px;
+    display:flex;
+    justify-content: center;
 }
 
 .calculator-container {
+    /* display:flex; */
     justify-content: center;
+    background-color: var(--bg-color);
+    padding: 6px;
+    margin: 2px;
+    min-height: 50vw;
+    /* width: 100vw; */
+    /* height: 100vh; */
+}
+
+.display {
+    border: solid black 1px;
+    background-color: var(--light-color);
+    border-radius: 12px;
+    min-width: 55%;
+    width: 55%;
+    text-align: right;
+    padding-right: 8px;
+    /* flex: 0 1 auto; */
+
+}
+
+button {
+    font-size: 26px;
+    padding: 10px;
+    border-radius: 10px;
+
+
+}
+
+.operator, .equals{
+    background-color: var(--vivid-blue)
+}
+
+.number{
+    background-color: var(--buttons-dark)
+}
+
+.function{
+    background-color: var(--buttons-light)
 }
