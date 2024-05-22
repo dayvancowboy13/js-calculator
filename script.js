@@ -24,9 +24,9 @@ function addListeners(){
 
     for (let i = 0; i < operatorNodes.length; i++){
         operatorNodes[i].addEventListener('click', ()=> {
-            operator = operatorNodes[i].textContent;
-
+            
             if(firstNumber === undefined){
+                operator = operatorNodes[i].textContent;
                 firstNumber = +display.textContent;
                 bClearDisplayOnTyping = true;
                 console.log(`The first number is ${firstNumber} and its type is ${typeof firstNumber}`);
@@ -35,14 +35,17 @@ function addListeners(){
                 secondNumber = +display.textContent;
                 console.log(`The 2nd number is ${secondNumber}`);
                 console.log(operator);
-                operate(operator, firstNumber, secondNumber)
+                operate(operator, firstNumber, secondNumber);
+                firstNumber = +display.textContent;
+                operator = operatorNodes[i].textContent;
+                bClearDisplayOnTyping;
                 // currently bugged; continuing to press an operator just takes the 
                 // display value and doubles or something else; need to allow user
                 // to 
 
             }
 
-            firstNumber = +display.textContent;
+            // firstNumber = +display.textContent;
 
         });
     }
@@ -51,8 +54,9 @@ function addListeners(){
     let equalNode = document.querySelector('.equals');
     equalNode.addEventListener("click", ()=>{
         secondNumber = +display.textContent;
-        console.log(`The first number is ${secondNumber} and its type is ${typeof secondNumber}`);
+        console.log(`The first number is ${secondNumber}`);
         operate(operator, firstNumber,secondNumber);
+        operator = '';
         // bClearDisplayOnTyping = true;
     });
 
@@ -80,7 +84,7 @@ function addListeners(){
         }
     })
 
-    // plus minus
+    // plus/minus
     let plusMinusNode = document.querySelector('#plus-minus');
     plusMinusNode.addEventListener("click", ()=>{
         if(display.textContent !== 0){
@@ -124,8 +128,9 @@ function operate(op, num1, num2){
     }
 
     display.textContent = result;
-    firstNumber= result;
+    firstNumber = undefined;
     secondNumber = undefined;
+    bClearDisplayOnTyping = true;
 }
 
 // BASIC MATH FUNCTIONS:
