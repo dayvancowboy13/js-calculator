@@ -19,20 +19,21 @@ html{
     flex-wrap:wrap;
     justify-content: center;
     background-color: var(--bg-color);
-    padding: 10px;
+    padding: 12px;
     margin: 2px;
     width: 500px;
     min-height: 85vh;
+    border: solid black 3px;
     border-radius: 13px;
 }
 
 .display {
-    border: solid black 1px;
+    border: solid black 3px;
     background-color: var(--light-color);
     border-radius: 12px;
     min-width: 99%;
-    max-height: 110px;
-    margin-top: 20px;
+    height: 110px;
+    margin-top: 30px;
     text-align: right;
     padding-right: 8px;
     font-size: 88px;
@@ -44,10 +45,14 @@ button {
     flex:1;
     font-size: 90%;
     padding: 10px;
+    border: solid black 2px;
     border-radius: 10px;
     min-width: 25%;
     max-height: 10%;
     font-weight: bold;
+}
+button:active {
+    background-color: var(--buttons-dark-compliment);
 }
 
 .operator, .equals{

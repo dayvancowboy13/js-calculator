@@ -2,7 +2,8 @@ let firstNumber;
 let operator = '';
 let secondNumber;
 let bClearDisplayOnTyping = true;
-const MAX_DISPLAY_CHARS = 5;
+const MAX_DISPLAY_CHARS = 7;
+let bLastButtonWasOperator = false;
 
 let display = document.querySelector(".display");
 addListeners();
@@ -15,6 +16,7 @@ function addListeners(){
     for (let i = 0; i < numberNodes.length; i++) {
         numberNodes[i].addEventListener('click',() =>{
             appendToDisplay(numberNodes[i].textContent);
+            bLastButtonWasOperator = false;
         })
     }
 
@@ -24,12 +26,12 @@ function addListeners(){
 
     for (let i = 0; i < operatorNodes.length; i++){
         operatorNodes[i].addEventListener('click', ()=> {
-            
-            if(firstNumber === undefined){
+
+            if(firstNumber === undefined || bLastButtonWasOperator){
                 operator = operatorNodes[i].textContent;
                 firstNumber = +display.textContent;
                 bClearDisplayOnTyping = true;
-                console.log(`The first number is ${firstNumber} and its type is ${typeof firstNumber}`);
+                console.log(`The first number is ${firstNumber}`);
                 console.log(operator);
             } else {
                 secondNumber = +display.textContent;
@@ -42,9 +44,10 @@ function addListeners(){
                 // currently bugged; continuing to press an operator just takes the 
                 // display value and doubles or something else; need to allow user
                 // to 
-
+                
             }
-
+            
+            bLastButtonWasOperator = true;
             // firstNumber = +display.textContent;
 
         });
@@ -53,11 +56,15 @@ function addListeners(){
     // equals - basically just displaying the result on the screen?
     let equalNode = document.querySelector('.equals');
     equalNode.addEventListener("click", ()=>{
-        secondNumber = +display.textContent;
-        console.log(`The first number is ${secondNumber}`);
-        operate(operator, firstNumber,secondNumber);
-        operator = '';
-        // bClearDisplayOnTyping = true;
+        if (firstNumber === undefined || bLastButtonWasOperator){
+            //do nothing
+        } else {
+            secondNumber = +display.textContent;
+            console.log(`The first number is ${secondNumber}`);
+            operate(operator, firstNumber,secondNumber);
+            operator = '';
+            bLastButtonWasOperator = false;
+        }
     });
 
     // clear
@@ -68,6 +75,7 @@ function addListeners(){
         secondNumber = undefined;
         operator = '';
         bClearDisplayOnTyping = true;
+        bLastButtonWasOperator = false;
     })
 
     // delete
@@ -82,6 +90,7 @@ function addListeners(){
             display.textContent = '0';
             bClearDisplayOnTyping = true;
         }
+        bLastButtonWasOperator = false;
     })
 
     // plus/minus
@@ -90,9 +99,13 @@ function addListeners(){
         if(display.textContent !== 0){
             display.textContent *= -1;
         }
+        bLastButtonWasOperator = false;
     });
 }
 
+function trimResult(result){
+    return (Math.round(result*10000))/10000;
+}
 
 function appendToDisplay(value){
     if(bClearDisplayOnTyping){
@@ -123,7 +136,7 @@ function operate(op, num1, num2){
             result = multiply(num1,num2);
             break;
         case "/":
-            result = divide(num1,num2);
+            result = trimResult(divide(num1,num2));
             break;
     }
 
