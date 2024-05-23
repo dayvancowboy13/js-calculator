@@ -3,16 +3,87 @@ let operator = '';
 let secondNumber;
 let bClearDisplayOnTyping = true;
 const MAX_DISPLAY_CHARS = 7;
+const DIV_ZERO_ERROR_MSG = "Error!"
 let bLastButtonWasOperator = false;
+const numbersString ="1234567890";
+const operatorsString = "/*-+"
 
 let display = document.querySelector(".display");
 addListeners();
 
+document.addEventListener(
+    "keydown",
+    (event) => {
+        const keyName = event.key;
+        console.log(`The key pressed was ${keyName} and it is type ${typeof keyName}`);
+
+        if(numbersString.includes(keyName)){
+            console.log("That is a number boiii!");
+            appendToDisplay(keyName);
+            bLastButtonWasOperator = false;
+
+        } else if (operatorsString.includes(keyName)){
+            console.log("That is an op sonny!")
+
+            if(firstNumber === undefined || bLastButtonWasOperator){
+                operator = keyName;
+                firstNumber = +checkDisplayContent();
+                bClearDisplayOnTyping = true;
+                console.log(`The first number is ${firstNumber}`);
+                console.log(operator);
+            } else {
+                secondNumber = +checkDisplayContent();
+                console.log(`The 2nd number is ${secondNumber}`);
+                console.log(operator);
+                operate(operator, firstNumber, secondNumber);
+                firstNumber = +checkDisplayContent();
+                operator = keyName;
+                bClearDisplayOnTyping;                
+            }
+            
+            bLastButtonWasOperator = true;
+
+        } else if ("Enter".includes(keyName)) {
+            if (firstNumber === undefined || bLastButtonWasOperator){
+                //do nothing
+            } else {
+                secondNumber = +checkDisplayContent();
+                console.log(`The first number is ${secondNumber}`);
+                operate(operator, firstNumber,secondNumber);
+                operator = '';
+                bLastButtonWasOperator = false;
+            }
+        } else if ("Backspace".includes(keyName)){
+            console.log("Backspace hit!")
+            let tempDisplayText = checkDisplayContent();
+            if (tempDisplayText.length !== 1) {
+                display.textContent = tempDisplayText.slice(0,tempDisplayText.length-1);
+                console.log(`The current display text is ${tempDisplayText} and after the
+                slice operation it is ${display.textContent}`)
+            } else {
+                display.textContent = '0';
+                bClearDisplayOnTyping = true;
+            }
+            bLastButtonWasOperator = false;
+
+        } else if (keyName === 'c'){
+            display.textContent = "0";
+            firstNumber = undefined;
+            secondNumber = undefined;
+            operator = '';
+            bClearDisplayOnTyping = true;
+            bLastButtonWasOperator = false;
+        }
+
+    }
+
+)
+
 
 function addListeners(){
-    let numberNodes = document.getElementsByClassName("number");
     
     // numbers
+    let numberNodes = document.getElementsByClassName("number");
     for (let i = 0; i < numberNodes.length; i++) {
         numberNodes[i].addEventListener('click',() =>{
             appendToDisplay(numberNodes[i].textContent);
@@ -29,37 +100,31 @@ function addListeners(){
 
             if(firstNumber === undefined || bLastButtonWasOperator){
                 operator = operatorNodes[i].textContent;
-                firstNumber = +display.textContent;
+                firstNumber = +checkDisplayContent();
                 bClearDisplayOnTyping = true;
                 console.log(`The first number is ${firstNumber}`);
                 console.log(operator);
             } else {
-                secondNumber = +display.textContent;
+                secondNumber = +checkDisplayContent();
                 console.log(`The 2nd number is ${secondNumber}`);
                 console.log(operator);
                 operate(operator, firstNumber, secondNumber);
-                firstNumber = +display.textContent;
+                firstNumber = +checkDisplayContent();
                 operator = operatorNodes[i].textContent;
-                bClearDisplayOnTyping;
-                // currently bugged; continuing to press an operator just takes the 
-                // display value and doubles or something else; need to allow user
-                // to 
-                
+                bClearDisplayOnTyping;                
             }
             
             bLastButtonWasOperator = true;
-            // firstNumber = +display.textContent;
-
         });
     }
 
-    // equals - basically just displaying the result on the screen?
+    // equals
     let equalNode = document.querySelector('.equals');
     equalNode.addEventListener("click", ()=>{
         if (firstNumber === undefined || bLastButtonWasOperator){
             //do nothing
         } else {
-            secondNumber = +display.textContent;
+            secondNumber = +checkDisplayContent();
             console.log(`The first number is ${secondNumber}`);
             operate(operator, firstNumber,secondNumber);
             operator = '';
@@ -81,7 +146,7 @@ function addListeners(){
     // delete
     let deleteNode = document.querySelector("#del");
     deleteNode.addEventListener("click", ()=>{
-        let tempDisplayText = display.textContent;
+        let tempDisplayText = checkDisplayContent();
         if (tempDisplayText.length !== 1) {
             display.textContent = tempDisplayText.slice(0,tempDisplayText.length-1);
             console.log(`The current display text is ${tempDisplayText} and after the
@@ -101,6 +166,14 @@ function addListeners(){
         }
         bLastButtonWasOperator = false;
     });
+}
+
+function checkDisplayContent(){
+    if (display.textContent === DIV_ZERO_ERROR_MSG){
+        display.textContent = 0;
+    }
+
+    return display.textContent;
 }
 
 function trimResult(result){
@@ -136,7 +209,11 @@ function operate(op, num1, num2){
             result = multiply(num1,num2);
             break;
         case "/":
-            result = trimResult(divide(num1,num2));
+            if (num2 === 0){
+                result = DIV_ZERO_ERROR_MSG;
+            } else {
+                result = trimResult(divide(num1,num2));
+            }
             break;
     }
 
